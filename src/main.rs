@@ -4,9 +4,9 @@ pub use minqueue::*;
 mod flatterm;
 pub use flatterm::*;
 
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 
-type DiscrMap = BTreeMap<Sym, DiscrNode>;
+type DiscrMap = HashMap<Sym, DiscrNode>;
 
 enum DiscrNode {
     Node(Option<Sym> /* None == '*' */, DiscrMap),
