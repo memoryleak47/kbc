@@ -9,7 +9,7 @@ use std::collections::HashMap;
 type DiscrMap = HashMap<Sym, DiscrNode>;
 
 enum DiscrNode {
-    Node(Option<Sym> /* None == '*' */, DiscrMap),
+    Branch(DiscrMap),
     Leaf(Vec<EqId>),
 }
 
