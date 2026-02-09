@@ -4,7 +4,13 @@ pub use minqueue::*;
 mod flatterm;
 pub use flatterm::*;
 
-use std::collections::HashMap;
+mod order;
+pub use order::*;
+
+mod parse;
+pub use parse::*;
+
+pub use std::collections::{HashMap, BTreeMap};
 
 type DiscrMap = HashMap<Sym, DiscrNode>;
 
