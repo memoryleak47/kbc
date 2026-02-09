@@ -20,11 +20,6 @@ pub struct Equation {
 }
 
 
-pub type EqId = usize; // index into equations.
-pub struct DiscrTree {
-    map: DiscrMap,
-    equations: Vec<Equation>,
-}
 
 type RuleId = usize;
 type Pos = usize;
@@ -36,8 +31,11 @@ struct Passive {
     pos: Pos,
 }
 
+pub type EqId = usize; // index into equations.
+
 pub struct State {
-    discr: DiscrTree,
+    discr: DiscrMap,
+    equations: Vec<Equation>,
     passive: MinPrioQueue<Score, Passive>,
 }
 
