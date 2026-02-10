@@ -1,21 +1,13 @@
-use crate::*;
-
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Token {
     LParen, RParen,
     Equals, // =
     Comma, // ,
     Dot, // .
-    Var(String),
-    Fun(String),
+    Str(String),
 }
 
-pub fn parse_file(s: &str) -> Vec<Equation> {
-    let mut tokens = tokenize(s);
-    todo!()
-}
-
-fn tokenize(s: &str) -> Option<Vec<Token>> {
+pub fn tokenize(s: &str) -> Vec<Token> {
     let mut tokens = Vec::new();
     let mut current: Option<String> = None;
     for c in s.chars() {
@@ -29,10 +21,7 @@ fn tokenize(s: &str) -> Option<Vec<Token>> {
         }
 
         if let Some(s) = current.take() {
-            let ch = s.chars().next()?;
-            let is_var = ('A'..='Z').contains(&ch);
-
-            let tok = if is_var { Token::Var(s) } else { Token::Fun(s) };
+            let tok = Token::Str(s);
             tokens.push(tok);
         }
 
@@ -47,17 +36,15 @@ fn tokenize(s: &str) -> Option<Vec<Token>> {
         } else if c == ',' {
             tokens.push(Token::Comma);
         } else if !c.is_whitespace() {
-            return None;
+            panic!();
         }
     }
 
     if let Some(s) = current.take() {
-        let ch = s.chars().next()?;
-        let is_var = ('A'..='Z').contains(&ch);
-
-        let tok = if is_var { Token::Var(s) } else { Token::Fun(s) };
+        let tok = Token::Str(s);
         tokens.push(tok);
     }
 
-    Some(tokens)
+    tokens
 }
+
