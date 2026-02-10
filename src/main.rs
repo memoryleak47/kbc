@@ -16,7 +16,13 @@ pub use order::*;
 mod state;
 pub use state::*;
 
+mod kbc;
+pub use kbc::*;
+
 pub use std::collections::{HashMap, BTreeMap};
 
 fn main() {
+    let s = std::fs::read_to_string("example.p").unwrap();
+    let eqs = parse_file(&s);
+    kbc(eqs);
 }

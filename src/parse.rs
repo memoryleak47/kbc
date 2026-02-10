@@ -38,6 +38,8 @@ fn tokenize(s: &str) -> Option<Vec<Token>> {
 
         if c == '=' {
             tokens.push(Token::Equals);
+        } else if c == '.' {
+            tokens.push(Token::Dot);
         } else if c == '(' {
             tokens.push(Token::LParen);
         } else if c == ')' {
