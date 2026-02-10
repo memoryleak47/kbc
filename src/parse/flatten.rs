@@ -25,7 +25,7 @@ fn flatten_ast_impl(ast: &AST, funmap: &mut Vec<String>, varmap: &mut Vec<String
     let sym = if is_var {
         assert!(ast.children.is_empty());
 
-        if let Some(n) = funmap.iter().position(|x| *x == f) {
+        if let Some(n) = varmap.iter().position(|x| *x == f) {
             let n = n as i32;
             Sym { repr: -(n+1) }
         } else {
