@@ -1,14 +1,4 @@
-#[derive(Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Debug)]
-pub struct Sym {
-    // positive: function
-    // negative: variable
-    repr: i32,
-}
-
-impl Sym {
-    pub fn is_var(&self) -> bool { self.repr < 0 }
-    pub fn is_fn(&self) -> bool { self.repr > 0 }
-}
+use crate::*;
 
 #[derive(Clone, Copy, PartialOrd, Ord, PartialEq, Eq)]
 pub struct Entry {
