@@ -13,7 +13,7 @@ pub fn init_symbol_map(map: Vec<String>) {
 pub struct Sym {
     // positive or zero: function
     // negative: variable
-    repr: i32,
+    pub repr: i32,
 }
 
 impl Sym {

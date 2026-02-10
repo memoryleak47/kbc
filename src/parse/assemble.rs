@@ -1,8 +1,8 @@
 use crate::parse::*;
 
 pub struct AST {
-    f: String,
-    children: Vec<AST>,
+    pub f: String,
+    pub children: Vec<AST>,
 }
 
 fn assemble_ast(toks: &mut &[Token]) -> AST {
