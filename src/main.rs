@@ -12,6 +12,7 @@ pub use parse::*;
 
 pub use std::collections::{HashMap, BTreeMap};
 
+// NOTE: Twee uses an array here, indexed by Sym.
 type DiscrMap = HashMap<Sym, DiscrNode>;
 
 enum DiscrNode {
