@@ -26,19 +26,23 @@ impl State {
 
     pub fn add_active(&mut self, mut e: Equation) {
         if e.lhs == e.rhs { return }
+        rename_canon(&mut e);
         if self.active.contains(&e) { return }
 
-        make_odd(&mut e.lhs);
-        make_odd(&mut e.rhs);
-
         let mut cps = Vec::new();
-        for mut a in self.active.iter().cloned() {
-            make_even(&mut a.lhs);
-            make_even(&mut a.rhs);
-            cps.extend(deduce_perms(&a, &e));
-        }
-        for cp in cps {
-            self.enqueue(cp);
+        {
+            let mut e2 = e.clone();
+            make_odd(&mut e2.lhs);
+            make_odd(&mut e2.rhs);
+
+            for mut a in self.active.iter().cloned() {
+                make_even(&mut a.lhs);
+                make_even(&mut a.rhs);
+                cps.extend(deduce_perms(&a, &e2));
+            }
+            for cp in cps {
+                self.enqueue(cp);
+            }
         }
 
         let i = self.active.len();
