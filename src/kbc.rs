@@ -25,6 +25,8 @@ impl State {
     }
 
     pub fn add_active(&mut self, mut e: Equation) {
+        if self.active.contains(&e) { return }
+
         make_odd(&mut e.lhs);
         make_odd(&mut e.rhs);
 
@@ -38,6 +40,8 @@ impl State {
             self.enqueue(cp);
         }
 
+        let i = self.active.len();
+        println!("{i}: {:?} = {:?}", e.lhs, e.rhs);
         self.active.push(e);
     }
 }
