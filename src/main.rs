@@ -13,6 +13,9 @@ pub use minqueue::*;
 mod order;
 pub use order::*;
 
+mod subst;
+pub use subst::*;
+
 mod state;
 pub use state::*;
 

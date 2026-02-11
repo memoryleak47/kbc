@@ -17,6 +17,9 @@ pub struct Sym {
 }
 
 impl Sym {
+    pub fn mk_fn(x: i32) -> Self { Self { repr: x } }
+    pub fn mk_var(x: i32) -> Self { Self { repr: -(x+1) } }
+
     pub fn is_fn(&self) -> bool { self.repr >= 0 }
     pub fn is_var(&self) -> bool { self.repr < 0 }
 }
@@ -27,8 +30,11 @@ impl Display for Sym {
         if i >= 0 {
             let i = i as usize;
             let g = SYMBOL_MAP.lock().unwrap();
-            let s = &g[i];
-            write!(f, "{s}")
+            if let Some(s) = &g.get(i) {
+                write!(f, "{s}")
+            } else {
+                write!(f, "f_{i}")
+            }
         } else {
             let i = -i;
             write!(f, "X{i}")
