@@ -26,7 +26,7 @@ impl State {
 
     pub fn add_active(&mut self, mut e: Equation) {
         if e.lhs == e.rhs { return }
-        rename_canon(&mut e);
+        make_canon(&mut e);
         if self.active.contains(&e) { return }
 
         let mut cps = Vec::new();
@@ -49,4 +49,29 @@ impl State {
         println!("{i}: {:?} = {:?}", e.lhs, e.rhs);
         self.active.push(e);
     }
+}
+
+fn make_canon(e: &mut Equation) {
+    if gt(&e.lhs, &e.rhs) {
+        e.oriented = true;
+        rename_canon(e);
+        return
+    }
+
+    if gt(&e.rhs, &e.lhs) {
+        std::mem::swap(&mut e.lhs, &mut e.rhs);
+        e.oriented = true;
+        rename_canon(e);
+        return
+    }
+
+    e.oriented = false;
+
+    let mut e2 = e.clone();
+    std::mem::swap(&mut e2.lhs, &mut e2.rhs);
+
+    rename_canon(e);
+    rename_canon(&mut e2);
+
+    if &e2 < e { std::mem::swap(e, &mut e2); }
 }

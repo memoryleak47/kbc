@@ -8,7 +8,7 @@ enum DiscrNode {
     Leaf(Vec<EqId>),
 }
 
-#[derive(PartialEq, Eq, Clone)]
+#[derive(PartialEq, Eq, Clone, PartialOrd, Ord)]
 pub struct Equation {
     pub lhs: Box<FlatTerm>,
     pub rhs: Box<FlatTerm>,

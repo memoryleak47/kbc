@@ -2,6 +2,9 @@ use crate::*;
 
 // s > t
 pub fn gt(s: &FlatTerm, t: &FlatTerm) -> bool {
+    ft_check(s);
+    ft_check(t);
+
     let vars_s = get_vars(s);
     let vars_t = get_vars(t);
     for (x, ct) in &vars_t {
@@ -26,19 +29,9 @@ pub fn gt(s: &FlatTerm, t: &FlatTerm) -> bool {
 
     assert_eq!(fs, ft);
 
-    let mut is = 1;
-    let mut it = 1;
-    while is < ws && it < wt {
-        let is_size = s[is].size as usize;
-        let it_size = s[it].size as usize;
-        let sub_s = &s[is..(is+is_size)];
-        let sub_t = &s[it..(it+it_size)];
+    for (sub_s, sub_t) in ft_children(s).zip(ft_children(t)) {
         if gt(sub_s, sub_t) { return true }
-
-        if sub_s == sub_t {
-            is += is_size;
-            it += it_size;
-        } else { return false }
+        if sub_s != sub_t { return false }
     }
 
     assert!(s == t);
