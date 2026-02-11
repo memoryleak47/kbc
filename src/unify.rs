@@ -50,7 +50,7 @@ fn subst_add(v: Sym, t: Box<FlatTerm>, subst: &mut Subst) -> Option<()> {
     let t = fix_apply_subst(t, subst);
 
     // nothing to be added.
-    if &*t == &[Entry { sym: v, size: 1 }] { return Some(()) }
+    if t[0].sym == v { return Some(()) }
 
     // cyclic definition, forbidden!
     if contains_var(&t, v) { return None }
@@ -82,5 +82,42 @@ fn contains_var(t: &FlatTerm, v: Sym) -> bool {
 }
 
 fn apply_subst(t: &FlatTerm, subst: &Subst) -> Box<FlatTerm> {
-    todo!()
+    let size = post_subst_size(t, subst);
+    let default_e = Entry { sym: Sym { repr: 0 }, size: 1 };
+    let mut out: Box<FlatTerm> = std::iter::repeat(default_e).take(size).collect();
+
+    let mut i = size - 1;
+    for (j, e) in t.iter().enumerate().rev() {
+        if e.sym.is_var() && let Some(tt) = subst.get(&e.sym) {
+            for a in tt.iter().rev() {
+                out[i] = *a;
+                i -= 1;
+            }
+        } else {
+            let child_count = ft_children(&t[j..]).count();
+            let mut esize = 1;
+            for _ in 0..child_count {
+                esize += out[i+(esize as usize)].size;
+            }
+            out[i] = Entry {
+                sym: e.sym,
+                size: esize,
+            };
+            i -= 1;
+        }
+    }
+    out
 }
+
+fn post_subst_size(t: &FlatTerm, subst: &Subst) -> usize {
+    let mut s = 0;
+    for Entry { sym, .. } in t {
+        if sym.is_var() && let Some(tt) = subst.get(sym) {
+            s += tt[0].size as usize;
+        } else {
+            s += 1;
+        }
+    }
+    s
+}
+
