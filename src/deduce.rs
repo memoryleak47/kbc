@@ -1,32 +1,32 @@
 use crate::*;
 
-pub fn deduce_perms(x: &Equation, y: &Equation) -> Vec<Equation> {
+pub fn deduce(x: &Equation, y: &Equation, cps: &mut Vec<Equation>) {
+    deduce2(x, y, cps);
+    deduce2(y, x, cps);
+}
+
+fn deduce2(x: &Equation, y: &Equation, cps: &mut Vec<Equation>) {
     let flip = |x: &Equation| Equation {
         lhs: x.rhs.clone(),
         rhs: x.lhs.clone(),
         oriented: false
     };
 
-    let mut cps = Vec::new();
     for x in [&x, &flip(x)] {
         for y in [&y, &flip(y)] {
-            cps.extend(deduce(x, y));
-            cps.extend(deduce(y, x));
+            deduce3(x, y, cps);
         }
     }
-    cps
 }
 
-pub fn deduce(x: &Equation, y: &Equation) -> Vec<Equation> {
-    let mut cps = Vec::new();
+fn deduce3(x: &Equation, y: &Equation, cps: &mut Vec<Equation>)  {
     for p in 0..y.lhs.len() {
-        cps.extend(deduce_one(x, y, p));
+        cps.extend(deduce4(x, y, p));
     }
-    cps
 }
 
 // assumes variables are disjoint.
-pub fn deduce_one(x: &Equation, y: &Equation, p: usize) -> Option<Equation> {
+fn deduce4(x: &Equation, y: &Equation, p: usize) -> Option<Equation> {
     assert!(p < y.lhs.len());
 
     let sig = unify(&x.lhs, pos_idx(&y.lhs, p))?;

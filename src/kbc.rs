@@ -29,16 +29,16 @@ impl State {
         make_canon(&mut e);
         if self.active.contains(&e) { return }
 
-        let mut cps = Vec::new();
         {
             let mut e2 = e.clone();
             make_odd(&mut e2.lhs);
             make_odd(&mut e2.rhs);
 
+            let mut cps = Vec::new();
             for mut a in self.active.iter().cloned() {
                 make_even(&mut a.lhs);
                 make_even(&mut a.rhs);
-                cps.extend(deduce_perms(&a, &e2));
+                deduce(&a, &e2, &mut cps);
             }
             for cp in cps {
                 self.enqueue(cp);
