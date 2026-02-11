@@ -25,8 +25,14 @@ impl State {
     }
 
     pub fn add_active(&mut self, e: Equation) {
-        self.active.push(e);
+        let mut cps = Vec::new();
+        for a in &self.active {
+            cps.extend(deduce_perms(a, &e));
+        }
+        for cp in cps {
+            self.enqueue(cp);
+        }
 
-        // TODO finds CPs.
+        self.active.push(e);
     }
 }

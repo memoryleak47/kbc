@@ -1,5 +1,30 @@
 use crate::*;
 
+pub fn deduce_perms(x: &Equation, y: &Equation) -> Vec<Equation> {
+    let flip = |x: &Equation| Equation {
+        lhs: x.rhs.clone(),
+        rhs: x.lhs.clone(),
+        oriented: false
+    };
+
+    let mut cps = Vec::new();
+    for x in [&x, &flip(x)] {
+        for y in [&y, &flip(y)] {
+            cps.extend(deduce(x, y));
+            cps.extend(deduce(y, x));
+        }
+    }
+    cps
+}
+
+pub fn deduce(x: &Equation, y: &Equation) -> Vec<Equation> {
+    let mut cps = Vec::new();
+    for p in 0..y.lhs.len() {
+        cps.extend(deduce_one(x, y, p));
+    }
+    cps
+}
+
 // assumes variables are disjoint.
 pub fn deduce_one(x: &Equation, y: &Equation, p: usize) -> Option<Equation> {
     assert!(p < y.lhs.len());

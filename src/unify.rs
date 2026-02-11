@@ -103,6 +103,7 @@ pub fn apply_subst(t: &FlatTerm, subst: &Subst) -> Box<FlatTerm> {
                 sym: e.sym,
                 size: esize,
             };
+            if i == 0 { assert!(j == 0); break } // TODO is this right?
             i -= 1;
         }
     }
