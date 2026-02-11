@@ -19,5 +19,35 @@ fn pos_idx(t: &FlatTerm, p: usize) -> &FlatTerm {
 
 // t[p := t2]
 fn pos_set(t: &FlatTerm, p: usize, t2: &FlatTerm) -> Box<FlatTerm> {
-    todo!()
+    // delta = how much bigger is the output term.
+    let delta: i32 = (t2[0].size as i32) - (t[p].size as i32);
+    let size = t[0].size as i32 + delta;
+    let default_e = Entry { sym: Sym { repr: 0 }, size: 1 };
+    let mut out: Box<FlatTerm> = std::iter::repeat(default_e).take(size as usize).collect();
+
+    // I. The part after p remains unchanged.
+    for i in (p+1)..t.len() {
+        out[i+(delta as usize)] = t[i];
+    }
+
+    // II. insert p := t2.
+    for i in 0..t2.len() {
+        out[p+i] = t2[i];
+    }
+
+    // III. compute part prior to p.
+    let mut i = p;
+    for (j, e) in t[..p].iter().enumerate().rev() {
+        let child_count = ft_children(&t[j..]).count();
+        let mut esize = 1;
+        for _ in 0..child_count {
+            esize += out[i+(esize as usize)].size;
+        }
+        out[i] = Entry {
+            sym: e.sym,
+            size: esize,
+        };
+        i -= 1;
+    }
+    out
 }
