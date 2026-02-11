@@ -4,7 +4,7 @@ use crate::*;
 pub fn deduce_one(l: &Equation, r: &Equation, p: usize) -> Option<Equation> {
     assert!(p < r.lhs.len());
 
-    let Some(sig) = unify(&l.lhs, pos_idx(&r.lhs, p)) else { return None };
+    let sig = unify(&l.lhs, pos_idx(&r.lhs, p))?;
     let sub = pos_set(&r.lhs, p, &l.rhs);
     let ll = apply_subst(&sub, &sig);
     let rr = apply_subst(&r.rhs, &sig);
