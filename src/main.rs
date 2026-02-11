@@ -19,6 +19,9 @@ pub use state::*;
 mod kbc;
 pub use kbc::*;
 
+mod rename;
+pub use rename::*;
+
 mod unify;
 pub use unify::*;
 

@@ -24,10 +24,15 @@ impl State {
         self.passive.push(score, eq);
     }
 
-    pub fn add_active(&mut self, e: Equation) {
+    pub fn add_active(&mut self, mut e: Equation) {
+        make_odd(&mut e.lhs);
+        make_odd(&mut e.rhs);
+
         let mut cps = Vec::new();
-        for a in &self.active {
-            cps.extend(deduce_perms(a, &e));
+        for mut a in self.active.iter().cloned() {
+            make_even(&mut a.lhs);
+            make_even(&mut a.rhs);
+            cps.extend(deduce_perms(&a, &e));
         }
         for cp in cps {
             self.enqueue(cp);
