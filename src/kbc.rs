@@ -25,6 +25,7 @@ impl State {
     }
 
     pub fn add_active(&mut self, mut e: Equation) {
+        if e.lhs == e.rhs { return }
         if self.active.contains(&e) { return }
 
         make_odd(&mut e.lhs);
