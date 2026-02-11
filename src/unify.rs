@@ -87,10 +87,11 @@ pub fn apply_subst(t: &FlatTerm, subst: &Subst) -> Box<FlatTerm> {
     let mut out: Box<FlatTerm> = std::iter::repeat(default_e).take(size).collect();
 
     let mut i = size - 1;
-    for (j, e) in t.iter().enumerate().rev() {
+    'outer: for (j, e) in t.iter().enumerate().rev() {
         if e.sym.is_var() && let Some(tt) = subst.get(&e.sym) {
             for a in tt.iter().rev() {
                 out[i] = *a;
+                if i == 0 { assert!(j == 0); break 'outer; }
                 i -= 1;
             }
         } else {
