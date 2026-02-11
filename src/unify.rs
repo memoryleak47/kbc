@@ -2,7 +2,7 @@ use crate::*;
 
 type Subst = HashMap<Sym, Box<FlatTerm>>;
 
-fn unify(l: &FlatTerm, r: &FlatTerm) -> Option<Subst> {
+pub fn unify(l: &FlatTerm, r: &FlatTerm) -> Option<Subst> {
     let mut subst = Default::default();
     unify_impl(l, r, &mut subst)?;
     Some(subst)
@@ -81,7 +81,7 @@ fn contains_var(t: &FlatTerm, v: Sym) -> bool {
     false
 }
 
-fn apply_subst(t: &FlatTerm, subst: &Subst) -> Box<FlatTerm> {
+pub fn apply_subst(t: &FlatTerm, subst: &Subst) -> Box<FlatTerm> {
     let size = post_subst_size(t, subst);
     let default_e = Entry { sym: Sym { repr: 0 }, size: 1 };
     let mut out: Box<FlatTerm> = std::iter::repeat(default_e).take(size).collect();
