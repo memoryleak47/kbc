@@ -19,6 +19,12 @@ pub use state::*;
 mod kbc;
 pub use kbc::*;
 
+mod unify;
+pub use unify::*;
+
+mod deduce;
+pub use deduce::*;
+
 pub use std::collections::{HashMap, BTreeMap};
 
 fn main() {

@@ -9,7 +9,7 @@ pub fn init_symbol_map(map: Vec<String>) {
     *g = map;
 }
 
-#[derive(Clone, Copy, PartialOrd, Ord, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
 pub struct Sym {
     // positive or zero: function
     // negative: variable

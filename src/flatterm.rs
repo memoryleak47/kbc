@@ -18,6 +18,18 @@ pub fn ft_next(t: &FlatTerm) -> &FlatTerm {
     &t[size..]
 }
 
+pub fn ft_children(t: &FlatTerm) -> impl Iterator<Item=&FlatTerm> {
+    let mut i = 1;
+    let size = t[0].size as usize;
+    std::iter::from_fn(move || {
+        if i >= size { return None }
+        let e = t[i];
+        let current_i = i;
+        i += e.size as usize;
+        Some(&t[current_i..])
+    })
+}
+
 use std::fmt::*;
 
 impl Display for Entry {
