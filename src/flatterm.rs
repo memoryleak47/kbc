@@ -8,6 +8,16 @@ pub struct Entry {
 
 pub type FlatTerm = [Entry];
 
+pub fn ft_child(t: &FlatTerm) -> &FlatTerm {
+    &t[1..]
+}
+
+pub fn ft_next(t: &FlatTerm) -> &FlatTerm {
+    let Entry { size, .. } = t[0];
+    let size = size as usize;
+    &t[size..]
+}
+
 use std::fmt::*;
 
 impl Display for Entry {
