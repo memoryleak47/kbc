@@ -57,7 +57,8 @@ fn pos_set(t: &FlatTerm, p: usize, t2: &FlatTerm) -> Box<FlatTerm> {
     let mut out: Box<FlatTerm> = std::iter::repeat(default_e).take(size as usize).collect();
 
     // I. The part after p remains unchanged.
-    for i in (p+1)..t.len() {
+    let post_start = p + t[p].size as usize;
+    for i in post_start..t.len() {
         out[(i as i32 + delta) as usize] = t[i];
     }
 
