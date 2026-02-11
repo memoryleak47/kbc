@@ -8,6 +8,7 @@ enum DiscrNode {
     Leaf(Vec<EqId>),
 }
 
+#[derive(PartialEq, Eq)]
 pub struct Equation {
     pub lhs: Box<FlatTerm>,
     pub rhs: Box<FlatTerm>,
@@ -16,7 +17,7 @@ pub struct Equation {
 
 type RuleId = usize;
 type Pos = usize;
-type Score = usize;
+type Score = u32;
 
 struct Passive {
     pub lhs: RuleId,
@@ -28,11 +29,11 @@ pub type EqId = usize; // index into equations.
 
 pub struct State {
     // invariant: Contains every lhs (and rhs of unoriented rules)
-    discr: DiscrMap,
+    // discr: DiscrMap,
 
     // invariant: every CP from elements of `equations` shall be in passive.
     // indices into this shall be stable.
-    equations: Vec<Equation>,
+    pub active: Vec<Equation>,
 
-    passive: MinPrioQueue<Score, Passive>,
+    pub passive: MinPrioQueue<Score, Equation>,
 }
