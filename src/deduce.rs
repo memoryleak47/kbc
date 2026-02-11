@@ -39,11 +39,17 @@ pub fn deduce_one(x: &Equation, y: &Equation, p: usize) -> Option<Equation> {
 
 // t[p]
 fn pos_idx(t: &FlatTerm, p: usize) -> &FlatTerm {
-    &t[p..]
+    assert!(p < t.len());
+    let size = t[p].size as usize;
+    &t[p..(p+size)]
 }
 
 // t[p := t2]
 fn pos_set(t: &FlatTerm, p: usize, t2: &FlatTerm) -> Box<FlatTerm> {
+    assert!(p < t.len());
+    ft_check(t);
+    ft_check(t2);
+
     // delta = how much bigger is the output term.
     let delta: i32 = (t2[0].size as i32) - (t[p].size as i32);
     let size = t[0].size as i32 + delta;

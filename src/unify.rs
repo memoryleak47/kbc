@@ -1,6 +1,9 @@
 use crate::*;
 
 pub fn unify(l: &FlatTerm, r: &FlatTerm) -> Option<Subst> {
+    ft_check(l);
+    ft_check(r);
+
     let mut subst = Default::default();
     unify_impl(l, r, &mut subst)?;
     Some(subst)
@@ -45,6 +48,7 @@ fn unify_impl(l: &FlatTerm, r: &FlatTerm, subst: &mut Subst) -> Option<()> {
 }
 
 fn subst_add(v: Sym, t: Box<FlatTerm>, subst: &mut Subst) -> Option<()> {
+    ft_check(&t);
     let t = fix_apply_subst(t, subst);
 
     // nothing to be added.

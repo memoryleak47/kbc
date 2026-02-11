@@ -6,13 +6,35 @@ pub struct Entry {
     pub size: u32, // size of that subterm
 }
 
+// contains only a single term, so t[0].size == t.len()
 pub type FlatTerm = [Entry];
 
+// might contain multiple terms.
+pub type FlatTermList = [Entry];
+
 pub fn ft_child(t: &FlatTerm) -> &FlatTerm {
-    &t[1..]
+    ft_shrink(&t[1..])
 }
 
-pub fn ft_next(t: &FlatTerm) -> &FlatTerm {
+pub fn ft_check(t: &FlatTerm) {
+    let n = t.len();
+
+    let mut s = 1;
+    for a in ft_children(t) {
+        ft_check(a);
+        s += a[0].size as usize;
+    }
+    assert!(n == t[0].size as usize);
+    assert!(n == s);
+}
+
+// reduces a term list to its first element.
+pub fn ft_shrink(t: &FlatTermList) -> &FlatTerm {
+    let size = t[0].size as usize;
+    &t[0..size]
+}
+
+pub fn ft_next(t: &FlatTermList) -> &FlatTermList {
     let Entry { size, .. } = t[0];
     let size = size as usize;
     &t[size..]
@@ -25,8 +47,9 @@ pub fn ft_children(t: &FlatTerm) -> impl Iterator<Item=&FlatTerm> {
         if i >= size { return None }
         let e = t[i];
         let current_i = i;
-        i += e.size as usize;
-        Some(&t[current_i..])
+        let esize = e.size as usize;
+        i += esize;
+        Some(&t[current_i..(current_i+esize)])
     })
 }
 

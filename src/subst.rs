@@ -2,7 +2,17 @@ use crate::*;
 
 pub type Subst = HashMap<Sym, Box<FlatTerm>>;
 
+pub fn subst_check(subst: &Subst) {
+    for (_, t) in subst {
+        ft_check(t);
+    }
+}
+
+// subst and t need to be shrunk.
 pub fn apply_subst(t: &FlatTerm, subst: &Subst) -> Box<FlatTerm> {
+    ft_check(t);
+    subst_check(subst);
+
     let size = post_subst_size(t, subst);
     let default_e = Entry { sym: Sym { repr: 0 }, size: 1 };
     let mut out: Box<FlatTerm> = std::iter::repeat(default_e).take(size).collect();
