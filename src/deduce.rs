@@ -1,13 +1,13 @@
 use crate::*;
 
 // assumes variables are disjoint.
-pub fn deduce_one(l: &Equation, r: &Equation, p: usize) -> Option<Equation> {
-    assert!(p < r.lhs.len());
+pub fn deduce_one(x: &Equation, y: &Equation, p: usize) -> Option<Equation> {
+    assert!(p < y.lhs.len());
 
-    let sig = unify(&l.lhs, pos_idx(&r.lhs, p))?;
-    let sub = pos_set(&r.lhs, p, &l.rhs);
+    let sig = unify(&x.lhs, pos_idx(&y.lhs, p))?;
+    let sub = pos_set(&y.lhs, p, &x.rhs);
     let ll = apply_subst(&sub, &sig);
-    let rr = apply_subst(&r.rhs, &sig);
+    let rr = apply_subst(&y.rhs, &sig);
     let eq = Equation { lhs: ll, rhs: rr, oriented: false };
     Some(eq)
 }
