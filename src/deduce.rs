@@ -12,9 +12,18 @@ fn deduce2(x: &Equation, y: &Equation, cps: &mut Vec<Equation>) {
         oriented: false
     };
 
-    for x in [&x, &flip(x)] {
-        for y in [&y, &flip(y)] {
-            deduce3(x, y, cps);
+    // tries both x and its reverse for unoriented rules
+    let both = |x: &Equation| {
+        if x.oriented {
+            vec![x.clone()]
+        } else {
+            vec![x.clone(), flip(x)]
+        }
+    };
+
+    for x in both(x) {
+        for y in both(y) {
+            deduce3(&x, &y, cps);
         }
     }
 }
