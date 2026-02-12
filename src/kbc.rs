@@ -22,6 +22,8 @@ impl State {
     pub fn enqueue(&mut self, eq: Equation) {
         // We simplify in enqueue to get the score right.
         let eq = simplify_eq(eq, self);
+        if eq.lhs == eq.rhs { return }
+        // NOTE: We could do some "is `eq` already in the queue? / active?" checking here
 
         let score = eq.lhs[0].size + eq.rhs[0].size;
         self.passive.push(score, eq);
