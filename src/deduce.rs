@@ -35,7 +35,7 @@ fn deduce3(x: &Equation, y: &Equation, cps: &mut Vec<Equation>)  {
 }
 
 // assumes variables are disjoint.
-fn deduce4(x: &Equation, y: &Equation, p: usize) -> Option<Equation> {
+fn deduce4(x: &Equation, y: &Equation, p: Pos) -> Option<Equation> {
     assert!(p < y.lhs.len());
 
     let sig = unify(&x.lhs, pos_idx(&y.lhs, p))?;
@@ -47,14 +47,14 @@ fn deduce4(x: &Equation, y: &Equation, p: usize) -> Option<Equation> {
 }
 
 // t[p]
-fn pos_idx(t: &FlatTerm, p: usize) -> &FlatTerm {
+fn pos_idx(t: &FlatTerm, p: Pos) -> &FlatTerm {
     assert!(p < t.len());
     let size = t[p].size as usize;
     &t[p..(p+size)]
 }
 
 // t[p := t2]
-fn pos_set(t: &FlatTerm, p: usize, t2: &FlatTerm) -> Box<FlatTerm> {
+fn pos_set(t: &FlatTerm, p: Pos, t2: &FlatTerm) -> Box<FlatTerm> {
     assert!(p < t.len());
     ft_check(t);
     ft_check(t2);

@@ -1,13 +1,5 @@
 use crate::*;
 
-// NOTE: Twee uses an array here, indexed by Sym.
-type DiscrMap = HashMap<Sym, DiscrNode>;
-
-enum DiscrNode {
-    Branch(DiscrMap),
-    Leaf(Vec<EqId>),
-}
-
 #[derive(PartialEq, Eq, Clone, PartialOrd, Ord)]
 pub struct Equation {
     pub lhs: Box<FlatTerm>,
@@ -15,25 +7,27 @@ pub struct Equation {
     pub oriented: bool,
 }
 
-type RuleId = usize;
-type Pos = usize;
-type Score = u32;
-
-struct Passive {
-    pub lhs: RuleId,
-    pub rhs: RuleId,
-    pub pos: Pos,
-}
+pub type RuleId = usize;
+pub type Pos = usize;
+pub type Score = u32;
 
 pub type EqId = usize; // index into equations.
 
 pub struct State {
     // invariant: Contains every lhs (and rhs of unoriented rules)
-    // discr: DiscrMap,
+    pub index: TermIndex,
 
     // invariant: every CP from elements of `equations` shall be in passive.
     // indices into this shall be stable.
     pub active: Vec<Equation>,
 
     pub passive: MinPrioQueue<Score, Equation>,
+}
+
+// NOTE: Twee uses this to encode passives as its more memory efficient. Maybe later.
+#[allow(unused)]
+struct Passive {
+    pub lhs: RuleId,
+    pub rhs: RuleId,
+    pub pos: Pos,
 }

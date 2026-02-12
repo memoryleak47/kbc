@@ -22,6 +22,9 @@ pub use state::*;
 mod kbc;
 pub use kbc::*;
 
+mod index;
+pub use index::*;
+
 mod rename;
 pub use rename::*;
 

@@ -16,6 +16,7 @@ impl State {
         Self {
             passive: MinPrioQueue::new(),
             active: Vec::new(),
+            index: TermIndex::new(),
         }
     }
 
