@@ -31,6 +31,9 @@ pub use unify::*;
 mod deduce;
 pub use deduce::*;
 
+mod simplify;
+pub use simplify::*;
+
 pub use std::collections::{HashMap, BTreeMap};
 
 fn main() {

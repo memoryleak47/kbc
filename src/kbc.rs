@@ -20,11 +20,17 @@ impl State {
     }
 
     pub fn enqueue(&mut self, eq: Equation) {
+        // We simplify in enqueue to get the score right.
+        let eq = simplify_eq(eq, self);
+
         let score = eq.lhs[0].size + eq.rhs[0].size;
         self.passive.push(score, eq);
     }
 
-    pub fn add_active(&mut self, mut e: Equation) {
+    pub fn add_active(&mut self, e: Equation) {
+        // We simplify in add_active (in addition to enqueue) as many new rules might have been added by now.
+        let mut e = simplify_eq(e, self);
+
         if e.lhs == e.rhs { return }
         make_canon(&mut e);
         if self.active.contains(&e) { return }
