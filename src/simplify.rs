@@ -21,11 +21,16 @@ pub fn simplify_term(t: &mut Box<FlatTerm>, st: &State) {
 
 // returns whether progress was made.
 fn simplify_term2(t: &mut Box<FlatTerm>, pos: Pos, st: &State) -> bool {
+    assert!(pos < t.len());
+
     let sub = pos_idx(t, pos);
     for (subst, eq_id) in st.index.find_matches(sub) {
         let rhs = &st.active[*eq_id].rhs;
         let rhs = apply_subst(rhs, &subst);
         *t = pos_set(t, pos, &rhs);
+
+        // We just apply a single rule for now.
+        return true
     }
     false
 }
