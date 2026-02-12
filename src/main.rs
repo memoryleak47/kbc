@@ -16,6 +16,9 @@ pub use order::*;
 mod subst;
 pub use subst::*;
 
+mod pos;
+pub use pos::*;
+
 mod state;
 pub use state::*;
 

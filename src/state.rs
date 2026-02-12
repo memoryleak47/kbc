@@ -8,7 +8,6 @@ pub struct Equation {
 }
 
 pub type RuleId = usize;
-pub type Pos = usize;
 pub type Score = u32;
 
 pub type EqId = usize; // index into equations.

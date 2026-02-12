@@ -56,6 +56,10 @@ impl State {
 
         let i = self.active.len();
         println!("{i}: {:?} = {:?}", e.lhs, e.rhs);
+        if e.oriented {
+            // for now we only add oriented equations to the discr tree, for simplicities sake.
+            self.index.add(&e.lhs, i);
+        }
         self.active.push(e);
     }
 }
