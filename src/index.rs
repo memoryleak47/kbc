@@ -47,7 +47,11 @@ impl<T> TermIndex<T> {
             let a = &k[0..size];
             let b = &k[size..];
             for (mut subst, t) in idx.find_matches(b) {
-                subst.insert(*s, ft_box(a));
+                if let Some(aa) = subst.get(&s) {
+                    if **aa != *a { continue }
+                } else {
+                    subst.insert(*s, ft_box(a));
+                }
                 out.push((subst, t));
             }
         }
