@@ -8,8 +8,6 @@ pub struct TermIndex<T> {
     here: Vec<T>,
 }
 
-pub type Match<T> = (Subst, T);
-
 impl<T> TermIndex<T> {
     pub fn new() -> Self {
         TermIndex {
@@ -28,8 +26,25 @@ impl<T> TermIndex<T> {
         index.here.push(t);
     }
 
-    pub fn index_match(&self, k: &FlatTerm) -> Vec<Match<T>> {
+    pub fn index_match(&self, k: &FlatTerm) -> Vec<(Subst, &T)> {
         assert!(is_canon_term(k));
+
+        if k.is_empty() {
+            return self.here.iter().map(|x| (Subst::new(), x)).collect()
+        }
+
+        // should this also happen if a.is_var()?
+        let a = k[0].sym;
+        if !a.is_var() && let Some(m) = self.children.get(&a) {
+            // TODO fix substs.
+            return m.index_match(&k[1..]);
+        }
+
+        for (s, idx) in &self.children {
+            if !s.is_var() { continue }
+
+            // TODO ...
+        }
 
         todo!()
     }
