@@ -8,3 +8,12 @@ pub enum IndexNode {
     Leaf(Vec<EqId>),
 }
 
+pub fn index_add(index: &mut TermIndex, k: &FlatTerm, v: EqId) {
+    todo!()
+}
+
+pub type Match = (Subst, EqId);
+
+pub fn index_match(index: &TermIndex, k: &FlatTerm) -> Vec<Match> {
+    todo!()
+}
