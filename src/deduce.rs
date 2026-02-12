@@ -77,21 +77,20 @@ fn pos_set(t: &FlatTerm, p: usize, t2: &FlatTerm) -> Box<FlatTerm> {
     }
 
     // III. compute part prior to p.
-    if p != 0 {
-        let mut i = p-1;
-        for (j, e) in t[..p].iter().enumerate().rev() {
-            let child_count = ft_children(&t[j..]).count();
-            let mut esize = 1;
-            for _ in 0..child_count {
-                esize += out[i+(esize as usize)].size;
-            }
-            out[i] = Entry {
-                sym: e.sym,
-                size: esize,
-            };
-            if i == 0 { assert!(j == 0); break }
-            i -= 1;
+    let mut i = p;
+    for (j, e) in t[..p].iter().enumerate().rev() {
+        i -= 1;
+        let child_count = ft_children(&t[j..]).count();
+        let mut esize = 1;
+        for _ in 0..child_count {
+            esize += out[i+(esize as usize)].size;
         }
+        out[i] = Entry {
+            sym: e.sym,
+            size: esize,
+        };
     }
+    assert!(i == 0);
+
     out
 }

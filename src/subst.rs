@@ -17,15 +17,15 @@ pub fn apply_subst(t: &FlatTerm, subst: &Subst) -> Box<FlatTerm> {
     let default_e = Entry { sym: Sym { repr: 0 }, size: 1 };
     let mut out: Box<FlatTerm> = std::iter::repeat(default_e).take(size).collect();
 
-    let mut i = size - 1;
-    'outer: for (j, e) in t.iter().enumerate().rev() {
+    let mut i = size;
+    for (j, e) in t.iter().enumerate().rev() {
         if e.sym.is_var() && let Some(tt) = subst.get(&e.sym) {
             for a in tt.iter().rev() {
-                out[i] = *a;
-                if i == 0 { assert!(j == 0); break 'outer; }
                 i -= 1;
+                out[i] = *a;
             }
         } else {
+            i -= 1;
             let child_count = ft_children(&t[j..]).count();
             let mut esize = 1;
             for _ in 0..child_count {
@@ -35,10 +35,9 @@ pub fn apply_subst(t: &FlatTerm, subst: &Subst) -> Box<FlatTerm> {
                 sym: e.sym,
                 size: esize,
             };
-            if i == 0 { assert!(j == 0); break } // TODO is this right?
-            i -= 1;
         }
     }
+    assert!(i == 0);
     out
 }
 
