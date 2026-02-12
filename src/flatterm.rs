@@ -40,6 +40,11 @@ pub fn ft_next(t: &FlatTermList) -> &FlatTermList {
     &t[size..]
 }
 
+pub fn ft_box(t: &FlatTerm) -> Box<FlatTerm> {
+    t.iter().copied().collect()
+}
+
+
 pub fn ft_children(t: &FlatTerm) -> impl Iterator<Item=&FlatTerm> {
     let mut i = 1;
     let size = t[0].size as usize;

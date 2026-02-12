@@ -38,6 +38,7 @@ mod simplify;
 pub use simplify::*;
 
 pub use std::collections::{HashMap, BTreeMap};
+pub use std::collections::hash_map::Entry as HMEntry;
 
 fn main() {
     let s = std::fs::read_to_string("example.p").unwrap();

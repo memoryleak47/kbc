@@ -15,7 +15,7 @@ pub type EqId = usize; // index into equations.
 
 pub struct State {
     // invariant: Contains every lhs (and rhs of unoriented rules)
-    pub index: TermIndex,
+    pub index: TermIndex<EqId>,
 
     // invariant: every CP from elements of `equations` shall be in passive.
     // indices into this shall be stable.
