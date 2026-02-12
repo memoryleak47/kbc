@@ -6,8 +6,9 @@ pub fn simplify_eq(mut e: Equation, st: &State) -> Equation {
     e
 }
 
-// all simplification rules should not need more memory, and thus fit into the container.
-pub fn simplify_term(t: &mut FlatTerm, st: &State) {
+// NOTE: all simplification rules should not need more memory, and thus fit into the container.
+// We might want a variant of "pos_set" that is more efficient for that.
+pub fn simplify_term(t: &mut Box<FlatTerm>, st: &State) {
     'outer: loop {
         for pos in 0..t.len() {
             if simplify_term2(t, pos, st) {
@@ -19,10 +20,12 @@ pub fn simplify_term(t: &mut FlatTerm, st: &State) {
 }
 
 // returns whether progress was made.
-fn simplify_term2(t: &mut FlatTerm, pos: Pos, st: &State) -> bool {
+fn simplify_term2(t: &mut Box<FlatTerm>, pos: Pos, st: &State) -> bool {
     let sub = pos_idx(t, pos);
-    for (subst, m) in st.index.find_matches(sub) {
-        todo!()
+    for (subst, eq_id) in st.index.find_matches(sub) {
+        let rhs = &st.active[*eq_id].rhs;
+        let rhs = apply_subst(rhs, &subst);
+        *t = pos_set(t, pos, &rhs);
     }
     false
 }

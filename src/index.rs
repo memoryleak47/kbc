@@ -27,6 +27,7 @@ impl<T> TermIndex<T> {
     }
 
     pub fn find_matches(&self, k: &FlatTerm) -> Vec<(Subst, &T)> {
+        // TODO: do we need this restriction?
         assert!(is_canon_term(k));
 
         if k.is_empty() {

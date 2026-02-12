@@ -10,6 +10,7 @@ pub fn pos_idx(t: &FlatTerm, p: Pos) -> &FlatTerm {
 }
 
 // t[p := t2]
+// TODO: We should have a in-place version of pos_set that requires non-positive delta.
 pub fn pos_set(t: &FlatTerm, p: Pos, t2: &FlatTerm) -> Box<FlatTerm> {
     assert!(p < t.len());
     ft_check(t);
