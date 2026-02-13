@@ -52,29 +52,28 @@ impl State {
         make_canon(&mut e);
         if self.active.contains(&e) { return }
 
-        {
-            let mut e2 = e.clone();
-            make_odd(&mut e2.lhs);
-            make_odd(&mut e2.rhs);
-
-            let mut cps = Vec::new();
-            for mut a in self.active.iter().cloned() {
-                make_even(&mut a.lhs);
-                make_even(&mut a.rhs);
-                deduce(&a, &e2, &mut cps);
-            }
-            for cp in cps {
-                self.enqueue(cp);
-            }
-        }
-
+        // add new equation.
         let i = self.active.len();
         println!("{i}: {}", eq_string(&e));
         if e.oriented {
             // for now we only add oriented equations to the discr tree, for simplicities sake.
             self.index.add(&e.lhs, i);
         }
-        self.active.push(e);
+        self.active.push(e.clone());
+
+        // add CPs!
+        make_odd(&mut e.lhs);
+        make_odd(&mut e.rhs);
+
+        let mut cps = Vec::new();
+        for mut a in self.active.iter().cloned() {
+            make_even(&mut a.lhs);
+            make_even(&mut a.rhs);
+            deduce(&a, &e, &mut cps);
+        }
+        for cp in cps {
+            self.enqueue(cp);
+        }
     }
 
     pub fn check_goals(&mut self) -> bool {
