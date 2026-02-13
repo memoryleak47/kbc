@@ -45,6 +45,6 @@ pub use std::collections::hash_map::Entry as HMEntry;
 
 fn main() {
     let s = std::fs::read_to_string("example.p").unwrap();
-    let eqs = parse_file(&s);
-    kbc(eqs);
+    let (eqs, goals) = parse_file(&s);
+    kbc(eqs, goals);
 }

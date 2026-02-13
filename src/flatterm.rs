@@ -74,3 +74,10 @@ pub fn ft_string(t: &FlatTerm) -> String {
     s.push(')');
     s
 }
+
+pub fn is_ground(t: &FlatTerm) -> bool {
+    for Entry { sym, .. } in t {
+        if sym.is_var() { return false }
+    }
+    true
+}

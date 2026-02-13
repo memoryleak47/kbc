@@ -1,5 +1,12 @@
 use crate::*;
 
+// lhs != rhs. Are required to be ground terms for now.
+#[derive(PartialEq, Eq, Clone, PartialOrd, Ord)]
+pub struct Goal {
+    pub lhs: Box<FlatTerm>,
+    pub rhs: Box<FlatTerm>,
+}
+
 #[derive(PartialEq, Eq, Clone, PartialOrd, Ord)]
 pub struct Equation {
     pub lhs: Box<FlatTerm>,
@@ -21,6 +28,8 @@ pub struct State {
     pub active: Vec<Equation>,
 
     pub passive: MinPrioQueue<Score, Equation>,
+
+    pub goals: Vec<Goal>,
 }
 
 // NOTE: Twee uses this to encode passives as its more memory efficient. Maybe later.

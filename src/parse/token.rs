@@ -2,6 +2,7 @@
 pub enum Token {
     LParen, RParen,
     Equals, // =
+    Excl, // !
     Comma, // ,
     Dot, // .
     Str(String),
@@ -25,7 +26,9 @@ pub fn tokenize(s: &str) -> Vec<Token> {
             tokens.push(tok);
         }
 
-        if c == '=' {
+        if c == '!' {
+            tokens.push(Token::Excl);
+        } else if c == '=' {
             tokens.push(Token::Equals);
         } else if c == '.' {
             tokens.push(Token::Dot);

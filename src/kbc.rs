@@ -1,13 +1,26 @@
 use crate::*;
 
-pub fn kbc(eqs: Vec<Equation>) {
+pub fn kbc(eqs: Vec<Equation>, goals: Vec<Goal>) {
     let mut st = State::new();
+
+    // only ground goals allowed for now.
+    for g in &goals {
+        assert!(is_ground(&g.lhs));
+        assert!(is_ground(&g.rhs));
+    }
+    st.goals = goals;
+
     for e in eqs {
         st.enqueue(e);
     }
 
     while let Some((_, x)) = st.passive.pop() {
         st.add_active(x);
+
+        if st.check_goals() {
+            println!("goal reached!");
+            return;
+        }
     }
 }
 
@@ -17,6 +30,7 @@ impl State {
             passive: MinPrioQueue::new(),
             active: Vec::new(),
             index: TermIndex::new(),
+            goals: Vec::new(),
         }
     }
 
@@ -61,6 +75,18 @@ impl State {
             self.index.add(&e.lhs, i);
         }
         self.active.push(e);
+    }
+
+    pub fn check_goals(&mut self) -> bool {
+        let mut goals = Vec::new();
+        for mut g in std::mem::take(&mut self.goals) {
+            simplify_term(&mut g.lhs, self);
+            simplify_term(&mut g.rhs, self);
+            if g.lhs == g.rhs { return true }
+            goals.push(g);
+        }
+        self.goals = goals;
+        false
     }
 }
 

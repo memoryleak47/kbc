@@ -37,7 +37,7 @@ fn assemble_str(s: &str, toks: &mut &[Token]) {
     assert_eq!(s, s2);
 }
 
-pub fn assemble_eq(toks: &mut &[Token]) -> (AST, AST) {
+pub fn assemble_eq(toks: &mut &[Token]) -> (AST, /*true = '='*/bool, AST) {
     // cnf(a,axiom,
     assemble_str("cnf", toks);
     assemble_token(Token::LParen, toks);
@@ -47,12 +47,18 @@ pub fn assemble_eq(toks: &mut &[Token]) -> (AST, AST) {
     assemble_token(Token::Comma, toks);
 
     let lhs = assemble_ast(toks);
+
+    let mut op = true;
+    if let Token::Excl = toks[0] {
+        op = false;
+        assemble_token(Token::Excl, toks);
+    }
     assemble_token(Token::Equals, toks);
     let rhs = assemble_ast(toks);
     assemble_token(Token::RParen, toks);
     assemble_token(Token::Dot, toks);
 
-    (lhs, rhs)
+    (lhs, op, rhs)
 }
 
 fn take_tok(toks: &mut &[Token]) -> Token {

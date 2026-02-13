@@ -9,7 +9,7 @@ use flatten::*;
 
 use crate::*;
 
-pub fn parse_file(s: &str) -> Vec<Equation> {
+pub fn parse_file(s: &str) -> (Vec<Equation>, Vec<Goal>) {
     let tokens: Vec<Token> = tokenize(s);
 
     let toks: &mut &[Token] = &mut &*tokens;
@@ -20,11 +20,11 @@ pub fn parse_file(s: &str) -> Vec<Equation> {
         eqs.push(eq);
     }
 
-    let (eqs, map) = flatten(eqs);
+    let (eqs, goals, map) = flatten(eqs);
 
     init_symbol_map(map);
 
-    eqs
+    (eqs, goals)
 }
 
 

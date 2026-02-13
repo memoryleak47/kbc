@@ -1,16 +1,21 @@
 use crate::parse::*;
 
-pub fn flatten(v: Vec<(AST, AST)>) -> (Vec<Equation>, Vec<String>) {
+pub fn flatten(v: Vec<(AST, bool, AST)>) -> (Vec<Equation>, Vec<Goal>, Vec<String>) {
     let mut funmap = Vec::new();
 
     let mut eqs = Vec::new();
-    for (l, r) in v {
+    let mut goals = Vec::new();
+    for (l, pol, r) in v {
         let mut varmap = Vec::new();
         let lhs = flatten_ast(l, &mut funmap, &mut varmap);
         let rhs = flatten_ast(r, &mut funmap, &mut varmap);
-        eqs.push(Equation { lhs, rhs, oriented: false });
+        if pol {
+            eqs.push(Equation { lhs, rhs, oriented: false });
+        } else {
+            goals.push( Goal { lhs, rhs });
+        }
     }
-    (eqs, funmap)
+    (eqs, goals, funmap)
 }
 
 fn flatten_ast(ast: AST, funmap: &mut Vec<String>, varmap: &mut Vec<String>) -> Box<FlatTerm> {
