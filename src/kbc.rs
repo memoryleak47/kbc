@@ -55,7 +55,7 @@ impl State {
         }
 
         let i = self.active.len();
-        println!("{i}: {:?} = {:?}", e.lhs, e.rhs);
+        println!("{i}: {}", eq_string(&e));
         if e.oriented {
             // for now we only add oriented equations to the discr tree, for simplicities sake.
             self.index.add(&e.lhs, i);
@@ -87,4 +87,12 @@ fn make_canon(e: &mut Equation) {
     rename_canon(&mut e2);
 
     if &e2 < e { std::mem::swap(e, &mut e2); }
+}
+
+fn eq_string(e: &Equation) -> String {
+    let op = match e.oriented {
+        false => "=",
+        true => "->"
+    };
+    format!("{} {op} {}", ft_string(&e.lhs), ft_string(&e.rhs))
 }

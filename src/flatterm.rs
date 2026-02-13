@@ -58,12 +58,19 @@ pub fn ft_children(t: &FlatTerm) -> impl Iterator<Item=&FlatTerm> {
     })
 }
 
-use std::fmt::*;
-
-impl Display for Entry {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(f, "({}: {})", self.sym, self.size)
+pub fn ft_string(t: &FlatTerm) -> String {
+    let Entry { sym, size } = t[0];
+    let mut s = sym.to_string();
+    if size == 1 {
+        return s
     }
+    s.push('(');
+    for c in ft_children(t) {
+        s.push_str(&ft_string(c));
+        s.push_str(", ");
+    }
+    s.pop().unwrap();
+    s.pop().unwrap();
+    s.push(')');
+    s
 }
-
-impl Debug for Entry { fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{self}") } }
