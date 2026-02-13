@@ -61,7 +61,7 @@ fn subst_add(v: Sym, t: Box<FlatTerm>, subst: &mut Subst) -> Option<()> {
 
     let old_subst = subst.clone();
 
-    for (vv, tt) in subst.iter_mut() {
+    for (_, tt) in subst.iter_mut() {
         *tt = fix_apply_subst(tt.clone(), &old_subst);
     }
 
