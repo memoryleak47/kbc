@@ -29,11 +29,11 @@ fn unify_impl(l: &FlatTerm, r: &FlatTerm, subst: &mut Subst) -> Option<()> {
 
     // define vars.
     if lv.is_var() && subst.get(&lv).is_none() {
-        subst_add(lv, box_ft(r), subst)?;
+        subst_add(lv, r, subst)?;
         return unify_impl(l, r, subst);
     }
     if rv.is_var() && subst.get(&rv).is_none() {
-        subst_add(rv, box_ft(l), subst)?;
+        subst_add(rv, l, subst)?;
         return unify_impl(l, r, subst);
     }
 
@@ -47,9 +47,19 @@ fn unify_impl(l: &FlatTerm, r: &FlatTerm, subst: &mut Subst) -> Option<()> {
     Some(())
 }
 
-fn subst_add(v: Sym, t: Box<FlatTerm>, subst: &mut Subst) -> Option<()> {
+fn subst_add(v: Sym, t: &FlatTerm, subst: &mut Subst) -> Option<()> {
+    // Three kinds of variables:
+    // - A_i (those already mapped by subst)
+    // - B_i (those not mapped by subst)
+    // - v (the one that we'll now set in subst)
+
+    // currently:
+    // - t contains A, B, v
+    // - subst.values() contain B, v.
+
     ft_check(&t);
-    let t = fix_apply_subst(t, subst);
+    let t = apply_subst(&t, subst);
+    // now t contains B, v.
 
     // nothing to be added.
     if t[0].sym == v { return Some(()) }
@@ -57,23 +67,21 @@ fn subst_add(v: Sym, t: Box<FlatTerm>, subst: &mut Subst) -> Option<()> {
     // cyclic definition, forbidden!
     if contains_var(&t, v) { return None }
 
+    // now t contains only B.
+    // thus subst maps a term with B, v to a term with only B from now on.
     subst.insert(v, t);
 
     let old_subst = subst.clone();
 
     for (_, tt) in subst.iter_mut() {
-        *tt = fix_apply_subst(tt.clone(), &old_subst);
+        // here tt contains B, v.
+        *tt = apply_subst(tt, &old_subst);
+        // but now tt contains only B.
     }
+
+    // at this point subst.values() contains only B.
 
     Some(())
-}
-
-fn fix_apply_subst(mut t: Box<FlatTerm>, subst: &Subst) -> Box<FlatTerm> {
-    loop {
-        let t2 = apply_subst(&t, subst);
-        if t == t2 { return t }
-        t = t2;
-    }
 }
 
 fn contains_var(t: &FlatTerm, v: Sym) -> bool {
